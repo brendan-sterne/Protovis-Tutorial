@@ -1,0 +1,38 @@
+<html><body>
+
+<div id="barchart"></div>
+
+<script type="text/javascript" src="http://vis.stanford.edu/protovis/protovis-r3.2.js"></script>
+<script type="text/javascript+protovis">
+
+
+var w = 200, h = 100;
+
+var hues = ["#f36c4f", "#fbb05e", "#e2e577", "#c0dd6a", "#91c946"];
+var saturations = [0.2, 0.2, 0.2, 0.25, 0.4, 0.5, 0.6];
+
+var panel = new pv.Panel()
+	.canvas('barchart')
+	.width(w)
+	.height(h)
+	.right(30)
+	.left(30)
+	.top(30)
+	.bottom(50)
+
+panel.add(pv.Panel)
+	.data(saturations)
+	.left(function() this.index*w/saturations.length)
+	.width(w/saturations.length-2)
+  .add(pv.Bar)
+	.data(hues)
+	.bottom(function() this.index*h/hues.length)
+	.height(h/hues.length-2)
+	.fillStyle(function(d,p) pv.color(d).alpha(p)) 
+
+
+panel.render();
+
+</script>
+
+</body></html>

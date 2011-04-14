@@ -1,0 +1,37 @@
+<html><body>
+
+<div id="barchart"></div>
+
+<script type="text/javascript" src="http://vis.stanford.edu/protovis/protovis-r3.2.js"></script>
+<script type="text/javascript+protovis">
+
+var reviews = [10, 12, 17, 15, 7, 2, 8, 5];
+
+var w = 100, h = 100,
+    maxr = Math.min(w,h)/2-5,
+	r = new pv.Scale.root(0,pv.max(reviews)).range(0,maxr)
+
+var panel = new pv.Panel()
+	.canvas('barchart')
+	.width(w)
+	.height(h)
+	.right(30)
+	.left(30)
+	.top(30)
+	.bottom(30)
+	.fillStyle('#EEE');
+ 
+panel.add(pv.Wedge)
+	.data(reviews)
+	.bottom(h/2)
+	.left(w/2)
+	.angle(Math.PI * 2 / reviews.length)
+	.outerRadius(function(d) r(d))
+	.fillStyle("steelblue")
+	.strokeStyle("black")
+ 
+panel.render();
+
+</script>
+
+</body></html>
