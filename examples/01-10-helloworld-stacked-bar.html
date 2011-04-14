@@ -1,0 +1,65 @@
+<html><body>
+
+<div id="barchart"></div>
+
+<script type="text/javascript" src="http://vis.stanford.edu/protovis/protovis-r3.2.js"></script>
+<script type="text/javascript+protovis">
+
+var reviews = [
+  {label:'Product A', reviews:10, questions: 5},
+  {label:'Product B', reviews:12, questions: 12},
+  {label:'Product C', reviews:17, questions: 4},
+  {label:'Product D', reviews:15, questions: 13},
+  {label:'Product E', reviews:7,  questions: 5},
+];
+
+var w = 100, h = 100,
+    x = new pv.Scale.linear(0,reviews.length).range(0,w),
+	max = pv.max(reviews,function(d) d.reviews+d.questions)	,
+    y = new pv.Scale.linear(0,max).range(0,h);
+ 
+var panel = new pv.Panel()
+	.canvas('barchart')
+	.width(w)
+	.height(h)
+	.right(30)
+	.left(30)
+	.top(30)
+	.bottom(50)
+	.fillStyle('#EEE');
+
+panel.add(pv.Rule)
+    .data(y.ticks(5))
+    .strokeStyle("#AAA")
+    .bottom(function(d) y(d))
+  .anchor("right").add(pv.Label)
+    .text(x.tickFormat); 
+
+var series = [
+	{property: 'reviews', color: 'red'},
+	{property: 'questions', color: 'green'},
+]
+
+function baseline(datum,property) {
+	total = 0;
+	for (i=0; series[i].property!=property; i++) {
+		total += y(datum[series[i].property])
+    }
+	return total;
+}
+
+panel.add(pv.Panel)
+	.data(reviews)
+	.left(function(d) x(this.index))
+	.width(w/reviews.length-2)
+  .add(pv.Bar)
+	.data(series)
+	.bottom(function(s,d) baseline(d,s.property))
+	.height(function(s,d) y(d[s.property]))
+	.fillStyle(function(s,d) s.color)
+
+panel.render();
+
+</script>
+
+</body></html>

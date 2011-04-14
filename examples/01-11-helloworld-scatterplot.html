@@ -1,0 +1,58 @@
+<html><body>
+
+<div id="barchart"></div>
+
+<script type="text/javascript" src="http://vis.stanford.edu/protovis/protovis-r3.2.js"></script>
+<script type="text/javascript+protovis"><!--
+
+var reviews = [
+  {label:'Product A', reviews:10, questions: 5},
+  {label:'Product B', reviews:12, questions: 12},
+  {label:'Product C', reviews:17, questions: 4},
+  {label:'Product D', reviews:15, questions: 13},
+  {label:'Product E', reviews:7,  questions: 5},
+];
+
+var w = 100, h = 100,
+    x = new pv.Scale.linear(0,pv.max(reviews,function(d) d.reviews)+5).range(0,w),
+    y = new pv.Scale.linear(0,pv.max(reviews,function(d) d.questions)+5).range(0,h),
+	c = pv.colors("red", "orange", "yellow", "green", "blue", "violet");
+ 
+var panel = new pv.Panel()
+	.canvas('barchart')
+	.width(w)
+	.height(h)
+	.right(30)
+	.left(30)
+	.top(30)
+	.bottom(50)
+	.fillStyle('#EEE');
+
+
+panel.add(pv.Rule)
+    .data(y.ticks(5))
+    .strokeStyle("white")
+    .bottom(function(d) y(d))
+  .anchor("right").add(pv.Label)
+    .text(y.tickFormat); 
+
+panel.add(pv.Rule)
+    .data(x.ticks(5))
+    .strokeStyle("white")
+    .left(function(d) x(d))
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat); 
+
+panel.add(pv.Dot)
+	.data(reviews)
+	.left(function(d) x(d.reviews))
+	.bottom(function(d) y(d.questions))
+	.size(30)
+	.strokeStyle(function(d) c(this.index))
+	.fillStyle(function(d) c(this.index).alpha(0.5))
+
+panel.render();
+
+--></script>
+
+</body></html>

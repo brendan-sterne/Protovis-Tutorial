@@ -1,0 +1,59 @@
+<html><body>
+
+<div id="barchart"></div>
+
+<script type="text/javascript" src="http://vis.stanford.edu/protovis/protovis-r3.2.js"></script>
+<script type="text/javascript+protovis">
+
+var reviews = [
+  {label:'Product A', count:10},
+  {label:'Product B', count:12},
+  {label:'Product C', count:17},
+  {label:'Product D', count:15},
+  {label:'Product E', count:7},
+];
+
+var w = 100, h = 100,
+    x = new pv.Scale.linear(0,reviews.length).range(0,w);
+    y = new pv.Scale.linear(0,pv.max(reviews,function(d) d.count)).range(0,h);
+ 
+var panel = new pv.Panel()
+	.canvas('barchart')
+	.width(w)
+	.height(h)
+	.right(30)
+	.left(30)
+	.top(30)
+	.bottom(50)
+	.fillStyle('#EEE');
+
+panel.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#AAA")
+    .bottom(function(d) y(d))
+  .anchor("right").add(pv.Label)
+    .text(x.tickFormat); 
+ 
+var hoverindex = -1;
+
+panel.add(pv.Bar)
+	.data(reviews)
+	.bottom(0)
+	.left(function(d) x(this.index))
+	.height(function(d) y(d.count))
+	.width(w/reviews.length-2)
+	.fillStyle(function(d) {return hoverindex == this.index ? "red" : "blue"})
+	.event("mouseover", function() {hoverindex = this.index; this.render();})
+    .event("mouseout", function() {hoverindex = -1; this.render();})	
+	.event('click',function(d) {alert('You clicked ' + d.label + ' with ' + pv.event)})
+  .anchor('bottom').add(pv.Label)
+    .text(function(d) d.label)
+	.font("11px sans-serif") 
+	.textAlign('right')
+    .textBaseline('top')
+    .textAngle(-Math.PI / 4)
+	.textStyle("blue")
+
+panel.render();
+
+</script>

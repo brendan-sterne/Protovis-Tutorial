@@ -1,0 +1,42 @@
+<html><body>
+
+<div id="barchart"></div>
+
+<script type="text/javascript" src="http://vis.stanford.edu/protovis/protovis-r3.2.js"></script>
+<script type="text/javascript+protovis">
+
+var reviews = [10, 12, 17, 15, 7, 2, 8, 5];
+
+var w = 100, h = 100,
+    x = new pv.Scale.linear(0,reviews.length).range(0,w);
+    y = new pv.Scale.linear(0,pv.max(reviews)).range(0,h);
+ 
+var panel = new pv.Panel()
+	.canvas('barchart')
+	.width(w)
+	.height(h)
+	.right(30)
+	.left(30)
+	.top(30)
+	.bottom(30)
+	.fillStyle('#EEE');
+
+panel.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#AAA")
+    .bottom(function(d) y(d))
+  .anchor("right").add(pv.Label)
+    .text(x.tickFormat); 
+ 
+panel.add(pv.Bar)
+	.data(reviews)
+	.bottom(0)
+	.left(function(d) x(this.index))
+	.height(function(d) y(d))
+	.width(w/reviews.length-2);
+ 
+panel.render();
+
+</script>
+
+</body></html>
